@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>INOWAS MODFLOW Modelling</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <style>
+        .Absolute-Center {
+          margin: auto;
+          position: absolute;
+          top: 0; left: 0; bottom: 0; right: 0;
+        }
+        .Absolute-Center.is-Responsive {
+          width: 50%;
+          height: 50%;
+          min-width: 200px;
+          max-width: 600px;
+          padding: 40px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="Absolute-Center is-Responsive">
+            <h2>Upload your MODFLOW JSON file</h2>
+            <form method=post enctype=multipart/form-data>
+                <input type="file" name='file'/>
+                <input type=submit value=Upload>
+            </form>
+            <ul style="margin-top: 50px;">
+                <li>Upload a valid JSON-file</li>
+                <li>You will be redirected automatically to /{id}</li>
+                <li>The url /{id} returns the metadata</li>
+                <li>The url /{id}/data returns the original data of all bands</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
