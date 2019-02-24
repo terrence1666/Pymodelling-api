@@ -1,6 +1,6 @@
-/InowasFlopyAdapter
+InowasFlopyAdapter/
 test.json
 test.py
 .idea
-/uploads
-/modflow
+uploads/
+modflow/
