@@ -1,7 +1,7 @@
 import os, time
 from flask import Flask, request, redirect, render_template
 from flask_cors import CORS, cross_origin
-import shutil
+import urllib.request
 
 import sqlite3
 
@@ -39,6 +39,18 @@ def read_json(file):
     return data
 
 
+def schema_validation(file):
+    content = read_json(file)
+    data = content.get("data").get("mf")
+    link = "https://schema.inowas.com/modflow/packages/packages.schema.json"
+    schemadata = urllib.request.urlopen ( link )
+    schema = json.loads(schemadata.read())
+    try:
+        jsonschema.validate(instance = data, schema= schema)
+    except jsonschema.exceptions.ValidationError:
+        return False
+    return True
+
 def file_extension(filename):
     if '.' in filename:
         return '_' + filename.rsplit ( '.', 1 )[ 1 ]
@@ -68,10 +80,14 @@ def upload_file():
         content = read_json ( temp_file )
         calculation_id = content.get ( "calculation_id" )
 
+        if not schema_validation(temp_file):
+            os.remove( temp_file )
+            return 'This JSON file does not match with the MODFLOW JSON Schema'
+
         target_directory = os.path.join ( app.config[ 'MODFLOW_FOLDER' ], calculation_id )
         modflow_file = os.path.join ( target_directory, 'configuration.json' )
         if os.path.exists ( modflow_file ):
-            return 'calculation_id (' + calculation_id + ')is already existing'
+            return 'calculation_id (' + calculation_id + ')is already existing. Address: http://127.0.0.1:5000/' + calculation_id
 
         os.makedirs ( target_directory )
         os.rename ( temp_file, modflow_file )
@@ -92,8 +108,9 @@ def configuration(calculation_id):
     modflow_file = os.path.join ( app.config[ 'MODFLOW_FOLDER' ], calculation_id, 'configuration.json' )
     if not os.path.exists ( modflow_file ):
         return 'The file does not exist'
-    with open ( modflow_file, 'r' ) as f:
-        return f.read ()
+    data = read_json(modflow_file).get("data").get("mf")
+    return json.dumps(data)
+
 
 
 if __name__ == '__main__':
