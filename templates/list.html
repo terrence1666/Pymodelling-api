@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+   <body>
+      <table border = 1>
+         <thead>
+            <td>ID</td>
+            <td>Calculation_id</td>
+            <td>State</td>
+            <td>Created</td>
+            <td>Updated</td>
+         </thead>
+         
+         {% for row in rows %}
+            <tr>
+               <td>{{row["id"]}}</td>
+               <td>{{row["calculation_id"]}}</td>
+               <td>{{row["state"]}}</td>
+               <td>{{row["created_at"]}}</td>
+               <td>{{row["updated_at"]}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+      
+      <a href = "/">Go back to home page</a>
+   </body>
+</html>
